@@ -1,8 +1,8 @@
 dependencies:
   post:
-    - ./script/bootstrap
+    - make bootstrap
   pre:
-    - sudo apt-get update && sudo apt-get install --no-install-recommends build-essential libpython2.7-dev python3-dev realpath
+    - sudo apt-get update && sudo apt-get install --no-install-recommends libpython2.7-dev python3-dev
 
 test:
   pre:

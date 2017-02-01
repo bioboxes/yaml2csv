@@ -12,7 +12,7 @@ publish: $(dist) env
 
 
 test:
-	$(path) python -m pytest test
+	tox -e py27-unit -e py3-unit -- $(ARGS)
 
 #################################################
 #

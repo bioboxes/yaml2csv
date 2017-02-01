@@ -1,0 +1,8 @@
+*.egg-info
+*.pyc
+.cache
+tmp
+.tox
+dist
+pyinstaller
+yaml2csv.spec

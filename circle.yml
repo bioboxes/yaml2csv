@@ -8,7 +8,6 @@ machine:
     - pyenv install --force ${PY_VERSION}
     - pyenv global ${PY_VERSION}
     - pip install tox==2.3
-    - make bootstrap
 
 test:
   pre:

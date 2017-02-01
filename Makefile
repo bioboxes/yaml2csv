@@ -1,12 +1,11 @@
 path    = PATH=$(PWD)/.tox/py3-build/bin:$(shell echo "${PATH}")
 version = $(shell $(path) python setup.py --version)
-name    = $(shell $(path) python setup.py --name)
-dist    = dist/$(name)-$(version).tar.gz
+dist    = dist/yaml2csv-$(version)
 
 publish: $(dist) env
 	$(path) aws s3 cp \
 		$< \
-		s3://bioboxes-packages/yaml2csv/$(version).tar.gz \
+		s3://bioboxes-packages/yaml2csv/yaml2csv-$(version).xz \
 		--grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
 
@@ -14,20 +13,25 @@ publish: $(dist) env
 test:
 	tox -e py3-unit -- $(ARGS)
 
-#################################################
+###########################################
 #
-# Build and test the pip package
+# Build project binary and documentation
 #
-#################################################
+###########################################
 
-build: test-build $(dist)
+build:  $(dist)/bin/yaml2csv
 
-test-build:
-	tox -e py3-build
 
-$(dist): $(shell find yaml2csv -type f) requirements/default.txt setup.py MANIFEST.in
-	@$(path) python setup.py sdist --formats=gztar
-	touch $@
+%.xz: %
+	xz --keep $<
+
+$(dist)/bin/yaml2csv: \
+	$(shell find yaml2csv bin -type f  ! -iname "*.pyc") \
+	requirements/default.txt \
+	setup.py \
+	MANIFEST.in
+	tox -e py3-build -- $(dir $@)
+
 
 #################################################
 #

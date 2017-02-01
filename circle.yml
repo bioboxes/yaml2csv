@@ -11,6 +11,7 @@ machine:
 
 test:
   pre:
+    - make bootstrap
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
   override:
     - make build

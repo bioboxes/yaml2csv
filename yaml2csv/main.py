@@ -2,11 +2,12 @@
 yaml2csv - convert YAML/JSON inputs to comma separated key value pairs.
 
 Usage:
-    yaml2csv --input=<in_yaml> --output=<out_csv>
+    yaml2csv [options] --input=<in_yaml> --output=<out_csv>
 
 Options:
-    --input=<in_yaml>     Source YAML/JSON file
-    --output=<out_csv>    Destination file for CSV output
+    --input=<in_yaml>       Source YAML/JSON file
+    --output=<out_csv>      Destination file for CSV output
+    --downcase              Convert all uppercase keys to lowercase
 """
 
 import csv
@@ -29,8 +30,14 @@ def flatten_dict(data):
     return dict(items())
 
 
-def convert(data):
-    return list(flatten_dict(data).items())
+def format(data, opts):
+    if ('--downcase' in opts) and opts['--downcase']:
+        data = map(lambda x: (x[0].lower(), x[1]), data)
+    return list(data)
+
+
+def convert(data, opts):
+    return format(list(flatten_dict(data).items()), opts)
 
 
 def parse_args(args):
@@ -43,5 +50,5 @@ def run(args):
         with open(opts['--output'], 'w') as out_file:
             in_data = yaml.load(in_file.read())
             out_data = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            for row in convert(in_data):
+            for row in convert(in_data, opts):
                 out_data.writerow(row)

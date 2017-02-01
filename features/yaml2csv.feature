@@ -4,7 +4,7 @@ Feature:
     Given I create the file "input.yaml" with the contents:
       """
       ---
-      key: value
+      KEY: value
       """
     When I run the command:
       """
@@ -15,7 +15,7 @@ Feature:
     And the file "output.csv" should exist
     And the file "output.csv" should contain:
       """
-      key,value
+      KEY,value
 
       """
 
@@ -51,6 +51,27 @@ Feature:
     When I run the command:
       """
       yaml2csv --input input.yaml --output output.csv
+      """
+    Then the stderr should be empty
+    And the exit code should be 0
+    And the file "output.csv" should exist
+    And the file "output.csv" should contain:
+      """
+      key_1.key_2,value_1
+
+      """
+
+
+  Scenario: Downcasing the generated output
+    Given I create the file "input.yaml" with the contents:
+      """
+      ---
+      Key_1:
+        KEY_2: value_1
+      """
+    When I run the command:
+      """
+      yaml2csv --input input.yaml --output output.csv --downcase
       """
     Then the stderr should be empty
     And the exit code should be 0

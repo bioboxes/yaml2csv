@@ -2,10 +2,10 @@ import yaml2csv.main as y2c
 
 def test_parse_args():
     assert y2c.parse_args(['--input', '1', '--output', '2']) ==\
-            {'--input' : '1', '--output' : '2'}
+            {'--input' : '1', '--output' : '2', '--downcase' : False}
 
 def assert_converted(input_, expected):
-    assert y2c.convert(input_) == expected
+    assert y2c.convert(input_, {}) == expected
 
 
 def test_convert_single_key_value_pair():
@@ -28,3 +28,16 @@ def test_convert_multiple_nested_key_value_pair():
     args = {"key_1" : { "key_2" : "val_1"}, "key_3" : { "key_4" : "val_2"}}
     expected = [("key_1.key_2", "val_1"), ("key_3.key_4", "val_2")]
     assert_converted(args, expected)
+
+
+def test_convert_multiple_nested_key_value_pair():
+    args = {"key_1" : { "key_2" : "val_1"}, "key_3" : { "key_4" : "val_2"}}
+    expected = [("key_1.key_2", "val_1"), ("key_3.key_4", "val_2")]
+    assert_converted(args, expected)
+
+
+def test_format_uppercase_key():
+    data = [("KEY", "value")]
+    expected = [("key", "value")]
+    assert y2c.format(data, {'--downcase' : True}) == expected
+

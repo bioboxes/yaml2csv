@@ -1,0 +1,2 @@
+recursive-exclude test *
+include requirements/default.txt

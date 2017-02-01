@@ -1,0 +1,19 @@
+dependencies:
+  post:
+    - ./script/bootstrap
+  pre:
+    - sudo apt-get update && sudo apt-get install --no-install-recommends build-essential libpython2.7-dev python3-dev realpath
+
+test:
+  pre:
+    - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
+  override:
+    - make build
+    - make test
+
+deployment:
+  deploy:
+    branch: master
+    owner: bioboxes
+    commands:
+      - ./script/publish

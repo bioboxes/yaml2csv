@@ -20,7 +20,7 @@ test:
 #
 #################################################
 
-build: $(dist) test-build
+build: test-build $(dist)
 
 test-build:
 	tox -e py27-build,py3-build

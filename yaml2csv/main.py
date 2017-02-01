@@ -16,11 +16,26 @@ from docopt           import docopt
 from yaml2csv.version import __version__
 
 
+# http://codereview.stackexchange.com/a/21035/129868
+def flatten_dict(data):
+    def items():
+        for key, value in data.items():
+            if isinstance(value, dict):
+                for subkey, subvalue in flatten_dict(value).items():
+                    yield key + "." + subkey, subvalue
+            else:
+                yield key, value
+
+    return dict(items())
+
+
 def convert(data):
-    return list(data.items())
+    return list(flatten_dict(data).items())
+
 
 def parse_args(args):
     return docopt(__doc__, args, True, version = __version__)
+
 
 def run(args):
     opts = parse_args(args)

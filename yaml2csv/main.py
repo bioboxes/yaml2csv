@@ -8,9 +8,10 @@ Options:
     --input=<in_yaml>       Source YAML/JSON file
     --output=<out_csv>      Destination file for CSV output
     --downcase              Convert all uppercase keys to lowercase
+    --strict-keys           Converts all non [A-Za-z0-9_.] characters into a single underscore
 """
 
-import csv
+import csv, re
 import ruamel.yaml as yaml
 
 from docopt           import docopt
@@ -30,9 +31,15 @@ def flatten_dict(data):
     return dict(items())
 
 
+def has_arg(key, args):
+    return (key in args) and args[key]
+
 def format(data, opts):
-    if ('--downcase' in opts) and opts['--downcase']:
+    if has_arg('--strict-keys', opts):
+        data = map(lambda x: (re.sub(r'[^A-Za-z0-9._]+', '_', x[0]), x[1]), data)
+    if has_arg('--downcase', opts):
         data = map(lambda x: (x[0].lower(), x[1]), data)
+
     return list(data)
 
 

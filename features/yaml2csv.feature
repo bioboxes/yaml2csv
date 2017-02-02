@@ -81,3 +81,22 @@ Feature:
       key_1.key_2,value_1
 
       """
+
+  Scenario: Converting a single YAML key-value pair with spaces
+    Given I create the file "input.yaml" with the contents:
+      """
+      ---
+      has  space: value
+      """
+    When I run the command:
+      """
+      yaml2csv --input input.yaml --output output.csv --strict-keys
+      """
+    Then the stderr should be empty
+    And the exit code should be 0
+    And the file "output.csv" should exist
+    And the file "output.csv" should contain:
+      """
+      has_space,value
+
+      """

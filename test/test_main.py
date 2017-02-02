@@ -2,7 +2,7 @@ import yaml2csv.main as y2c
 
 def test_parse_args():
     assert y2c.parse_args(['--input', '1', '--output', '2']) ==\
-            {'--input' : '1', '--output' : '2', '--downcase' : False}
+            {'--input' : '1', '--output' : '2', '--downcase' : False, '--strict-keys' : False}
 
 def assert_converted(input_, expected):
     assert y2c.convert(input_, {}) == expected
@@ -41,3 +41,8 @@ def test_format_uppercase_key():
     expected = [("key", "value")]
     assert y2c.format(data, {'--downcase' : True}) == expected
 
+
+def test_format_strict_keys():
+    data = [("has  |space", "value")]
+    expected = [("has_space", "value")]
+    assert y2c.format(data, {'--strict-keys' : True}) == expected

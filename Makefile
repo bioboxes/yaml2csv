@@ -2,13 +2,14 @@ path    = PATH=$(PWD)/.tox/py3-build/bin:$(shell echo "${PATH}")
 version = $(shell $(path) python setup.py --version)
 dist    = dist/yaml2csv-$(version)
 
-publish: $(dist) env
+publish: $(dist)/bin/yaml2csv.xz
 	$(path) aws s3 cp \
 		$< \
 		s3://bioboxes-packages/yaml2csv/yaml2csv-$(version).xz \
 		--grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
-
+feature: $(dist)/bin/yaml2csv
+	tox -e py3-feature -- $(ARGS)
 
 test:
 	tox -e py3-unit -- $(ARGS)
@@ -41,5 +42,6 @@ $(dist)/bin/yaml2csv: \
 
 
 bootstrap:
+	mkdir -p tmp
 
-.PHONY: test bootstrap build publish
+.PHONY: test bootstrap build publish feature

@@ -24,7 +24,7 @@ build:  $(dist)/bin/yaml2csv
 
 
 %.xz: %
-	xz --keep $<
+	xz --keep --force $<
 
 $(dist)/bin/yaml2csv: \
 	$(shell find yaml2csv bin -type f  ! -iname "*.pyc") \

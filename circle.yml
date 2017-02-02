@@ -22,4 +22,4 @@ deployment:
     branch: master
     owner: bioboxes
     commands:
-      - ./script/publish
+      - make publish

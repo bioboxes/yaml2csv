@@ -1,0 +1,25 @@
+---
+machine:
+  environment:
+    PY_VERSION: 3.5.2
+    LD_LIBRARY_PATH: ${PYENV_ROOT}/versions/${PY_VERSION}/lib/
+    PYTHON_CONFIGURE_OPTS: --enable-shared
+  post:
+    - pyenv install --force ${PY_VERSION}
+    - pyenv global ${PY_VERSION}
+    - pip install tox==2.3
+
+test:
+  pre:
+    - make bootstrap
+    - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
+  override:
+    - make build
+    - make test
+
+deployment:
+  deploy:
+    branch: master
+    owner: bioboxes
+    commands:
+      - make publish

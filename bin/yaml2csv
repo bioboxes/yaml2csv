@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import os, sys, pkg_resources
+path = os.path.abspath(pkg_resources.resource_filename(__name__, '..'))
+sys.path.insert(1, path)
+
+import yaml2csv.main as y2c
+y2c.run(sys.argv[1:])

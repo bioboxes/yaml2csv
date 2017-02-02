@@ -5,10 +5,11 @@ Usage:
     yaml2csv [options] --input=<in_yaml> --output=<out_csv>
 
 Options:
-    --input=<in_yaml>       Source YAML/JSON file
-    --output=<out_csv>      Destination file for CSV output
-    --downcase              Convert all uppercase keys to lowercase
-    --strict-keys           Converts all non [A-Za-z0-9_.] characters into a single underscore
+    --input=<in_yaml>     Source YAML/JSON file.
+    --output=<out_csv>    Destination file for CSV output.
+    --downcase            Convert all uppercase keys to lowercase.
+    --strict-keys         Converts all non [A-Za-z0-9_.] characters into a single underscore.
+    --convert-bools       Converts True/False booleans to 1/0 integers.
 """
 
 import csv, re
@@ -16,6 +17,14 @@ import ruamel.yaml as yaml
 
 from docopt           import docopt
 from yaml2csv.version import __version__
+
+
+def has_arg(key, args):
+    return (key in args) and args[key]
+
+
+def parse_args(args):
+    return docopt(__doc__, args, True, version = __version__)
 
 
 # http://codereview.stackexchange.com/a/21035/129868
@@ -31,24 +40,26 @@ def flatten_dict(data):
     return dict(items())
 
 
-def has_arg(key, args):
-    return (key in args) and args[key]
+def possibly_convert_bool(i):
+    if type(i) == bool:
+        return int(i)
+    else:
+        return i
+
 
 def format(data, opts):
     if has_arg('--strict-keys', opts):
         data = map(lambda x: (re.sub(r'[^A-Za-z0-9._]+', '_', x[0]), x[1]), data)
     if has_arg('--downcase', opts):
         data = map(lambda x: (x[0].lower(), x[1]), data)
-
+    if has_arg('--convert-bools', opts):
+        data = map(lambda x: (x[0], possibly_convert_bool(x[1])), data)
     return list(data)
 
 
 def convert(data, opts):
     return format(list(flatten_dict(data).items()), opts)
 
-
-def parse_args(args):
-    return docopt(__doc__, args, True, version = __version__)
 
 
 def run(args):

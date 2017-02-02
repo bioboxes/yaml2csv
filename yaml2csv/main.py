@@ -10,6 +10,7 @@ Options:
     --downcase            Convert all uppercase keys to lowercase.
     --strict-keys         Converts all non [A-Za-z0-9_.] characters into a single underscore.
     --convert-bools       Converts True/False booleans to 1/0 integers.
+    --sort                Sorts the output CSV by the keys
 """
 
 import csv, re
@@ -54,12 +55,14 @@ def format(data, opts):
         data = map(lambda x: (x[0].lower(), x[1]), data)
     if has_arg('--convert-bools', opts):
         data = map(lambda x: (x[0], possibly_convert_bool(x[1])), data)
+    if has_arg('--sort', opts):
+        data = list(data)
+        data.sort(key = lambda x: x[0])
     return list(data)
 
 
 def convert(data, opts):
     return format(list(flatten_dict(data).items()), opts)
-
 
 
 def run(args):

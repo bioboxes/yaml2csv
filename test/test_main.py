@@ -6,7 +6,8 @@ def test_parse_args():
              '--output' : '2',
              '--downcase' : False,
              '--strict-keys' : False,
-             '--convert-bools' : False}
+             '--convert-bools' : False,
+             '--sort' : False}
 
 def assert_converted(input_, expected):
     assert y2c.convert(input_, {}) == expected

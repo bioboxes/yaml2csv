@@ -121,3 +121,26 @@ Feature:
       key_2,0
 
       """
+
+  Scenario: Sorting the output
+    Given I create the file "input.yaml" with the contents:
+      """
+      ---
+      c: 3
+      a: 1
+      b: 2
+      """
+    When I run the command:
+      """
+      yaml2csv --input input.yaml --output output.csv --sort
+      """
+    Then the stderr should be empty
+    And the exit code should be 0
+    And the file "output.csv" should exist
+    And the file "output.csv" should contain:
+      """
+      a,1
+      b,2
+      c,3
+
+      """
